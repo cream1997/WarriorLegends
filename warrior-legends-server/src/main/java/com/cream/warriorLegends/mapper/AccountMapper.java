@@ -8,4 +8,6 @@ import org.apache.ibatis.annotations.Param;
 public interface AccountMapper extends BaseMapper<Account> {
 
     int selectCountByUsername(@NonNull @Param("username") String username);
+
+    Account selectByUsername(String username);
 }

@@ -1,5 +1,6 @@
 package com.cream.warriorLegends.controller;
 
+import com.cream.warriorLegends.obj.vo.LoginRes;
 import com.cream.warriorLegends.service.IAccountService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public void login() {
+    public LoginRes login(String username, String password) {
+        return this.accountService.login(username, password);
     }
 }
