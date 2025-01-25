@@ -47,7 +47,6 @@ function moveMap() {
     const selfCenterTop = rect.top + rect.height / 2;
     const mapLeft = selfCenterLeft - me.x;
     const mapTop = selfCenterTop - me.y;
-    console.log(mapLeft);
     if (mapRef.value) {
       mapRef.value.style.left = mapLeft + "px";
       mapRef.value.style.top = mapTop + "px";
@@ -62,13 +61,26 @@ function addMoveKeyListener() {
     if (moving) {
       return;
     }
+    // 判断按的是上下左右
+    let xAdd = 0;
+    let yAdd = 0;
+    if (e.key === "ArrowUp") {
+      yAdd -= 1;
+    } else if (e.key === "ArrowDown") {
+      yAdd += 1;
+    } else if (e.key === "ArrowLeft") {
+      xAdd -= 1;
+    } else if (e.key === "ArrowRight") {
+      xAdd += 1;
+    }
+
     moving = true;
     // 0.2s走一格300ms走30px
     let moveLength = 0;
     const task = setInterval(() => {
-      console.log("a");
       moveLength += 1;
-      me.x += 1;
+      me.x += xAdd;
+      me.y += yAdd;
       moveMap();
       if (moveLength >= 30) {
         clearInterval(task);
