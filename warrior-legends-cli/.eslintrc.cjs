@@ -15,6 +15,8 @@ module.exports = {
     "vue/multi-word-component-names": "off",
     //----自定义规则----
     quotes: ["error", "double"], // 使用双引号
-    semi: ["error", "always"] // 使用分号
+    semi: ["error", "always"], // 使用分号
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "off"
   }
 };
