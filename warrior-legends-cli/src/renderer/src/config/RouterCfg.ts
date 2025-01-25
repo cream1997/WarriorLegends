@@ -8,6 +8,10 @@ const routes = [
   {
     path: "/login",
     component: () => import("../pages/LoginPage.vue")
+  },
+  {
+    path: "/home",
+    component: () => import("../pages/Home.vue")
   }
 ];
 export const router = createRouter({
