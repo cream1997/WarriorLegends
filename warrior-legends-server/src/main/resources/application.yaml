@@ -9,10 +9,12 @@ spring:
   sql:
     init:
       schema-locations: classpath:db/initSchema.sql
-#      data-locations: classpath:db/initData.sql
+      #      data-locations: classpath:db/initData.sql
       mode: always
 server:
   port: 8888
+  servlet:
+    context-path: /api
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
