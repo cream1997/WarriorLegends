@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: warrior-legends-server
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: Cr@123456
+    url: jdbc:mysql://127.0.0.1:3306/warrior_legends?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+  sql:
+    init:
+      schema-locations: classpath:db/initSchema.sql
+#      data-locations: classpath:db/initData.sql
+server:
+  port: 8888
