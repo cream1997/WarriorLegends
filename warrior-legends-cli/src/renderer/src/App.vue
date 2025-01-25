@@ -1,10 +1,9 @@
 <script setup lang="ts">
-
-const ipcHandle = () => window.electron.ipcRenderer.send('ping')
+const ipcHandle = () => window.electron.ipcRenderer.send("ping");
 </script>
 
 <template>
-    <div>
-      <a target="_blank" rel="noreferrer" @click="ipcHandle">Send IPC</a>
-    </div>
+  <div>
+    <a target="_blank" rel="noreferrer" @click="ipcHandle">Send IPC</a>
+  </div>
 </template>
