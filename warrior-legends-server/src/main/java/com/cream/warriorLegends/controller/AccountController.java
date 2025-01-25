@@ -21,10 +21,12 @@ public class AccountController {
     }
 
     @PostMapping("/register")
-    public void register(@NonNull String username, @NonNull String password){
+    public String register(@NonNull String username, @NonNull String password) {
         this.accountService.register(username, password);
+        return "注册成功";
     }
 
     @PostMapping("/login")
-    public void login(){}
+    public void login() {
+    }
 }

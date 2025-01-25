@@ -1,4 +1,4 @@
-package com.cream.warriorLegends.entity;
+package com.cream.warriorLegends.obj.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Getter;
