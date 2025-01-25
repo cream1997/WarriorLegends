@@ -17,6 +17,7 @@ module.exports = {
     quotes: ["error", "double"], // 使用双引号
     semi: ["error", "always"], // 使用分号
     "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": "off"
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-explicit-any": "off"
   }
 };
