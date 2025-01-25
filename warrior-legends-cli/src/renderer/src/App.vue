@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import LoginPage from "@/pages/LoginPage.vue";
 
 const ipcHandle = () => window.electron.ipcRenderer.send("ping");
 </script>
 
 <template>
-  <LoginPage></LoginPage>
+  <router-view v-slot="{ Component }">
+    <keep-alive>
+      <component :is="Component" />
+    </keep-alive>
+  </router-view>
 </template>
