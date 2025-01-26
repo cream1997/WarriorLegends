@@ -8,6 +8,8 @@ An Electron application with Vue and TypeScript
 
 ## Project Setup
 
+node version: v22.12.0
+
 ### Install
 
 ```bash
@@ -25,10 +27,6 @@ $ npm run dev
 ```bash
 # For windows
 $ npm run build:win
-
 # For macOS
 $ npm run build:mac
-
-# For Linux
-$ npm run build:linux
 ```
