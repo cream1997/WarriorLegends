@@ -24,5 +24,7 @@ class AppStartupRunner implements ApplicationRunner {
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 		log.info("SpringApplication started...");
+
+		// todo 数据库version对比，存一些重要的实体类的结构，检查是否能对上，否则将来会序列化失败
 	}
 }
