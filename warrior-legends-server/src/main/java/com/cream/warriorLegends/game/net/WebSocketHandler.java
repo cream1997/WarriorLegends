@@ -1,4 +1,4 @@
-package com.cream.warriorLegends.net;
+package com.cream.warriorLegends.game.net;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

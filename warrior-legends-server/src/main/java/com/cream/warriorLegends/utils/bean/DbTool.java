@@ -2,7 +2,7 @@ package com.cream.warriorLegends.utils.bean;
 
 import com.alibaba.fastjson2.JSON;
 import com.cream.warriorLegends.mapper.ChunkDataMapper;
-import com.cream.warriorLegends.obj.game.Role;
+import com.cream.warriorLegends.game.base.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

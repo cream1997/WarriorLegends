@@ -1,4 +1,4 @@
-package com.cream.warriorLegends.obj.game;
+package com.cream.warriorLegends.game.base;
 
 import lombok.Getter;
 import lombok.Setter;

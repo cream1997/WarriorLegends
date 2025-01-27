@@ -1,7 +1,6 @@
-package com.cream.warriorLegends.net;
+package com.cream.warriorLegends.game.net;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;

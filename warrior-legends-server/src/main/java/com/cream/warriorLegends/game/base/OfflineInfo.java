@@ -1,4 +1,4 @@
-package com.cream.warriorLegends.obj.game;
+package com.cream.warriorLegends.game.base;
 
 import com.cream.warriorLegends.obj.common.position.Location;
 import lombok.Getter;
