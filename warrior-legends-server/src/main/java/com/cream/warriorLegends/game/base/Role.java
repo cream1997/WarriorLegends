@@ -1,5 +1,6 @@
 package com.cream.warriorLegends.game.base;
 
+import com.cream.warriorLegends.obj.common.position.Xy;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,5 +15,10 @@ public class Role {
     private long id;
     private String nickNane;
     private int level;
-    private OfflineInfo offlineInfo;
+    private long hp;
+    private long mp;
+    private int mapId;
+    private Xy xy;
+    private long loginTime;
+    private long logoutTime;
 }
