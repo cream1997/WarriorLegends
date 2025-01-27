@@ -60,9 +60,8 @@ public class GameServer {
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
-            ChannelFuture channelFuture = bootstrap.bind(port).sync();
+            bootstrap.bind(port).sync();
             log.info("Game Server started on port:{}, path:{}", port, WEBSOCKET_PATH);
-            channelFuture.channel().closeFuture().sync();
         } finally {
             shutdown();
         }
