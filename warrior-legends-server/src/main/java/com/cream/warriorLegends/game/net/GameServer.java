@@ -40,30 +40,26 @@ public class GameServer {
         bossGroup = new NioEventLoopGroup(1);
         workerGroup = new NioEventLoopGroup(2);
 
-        try {
-            ServerBootstrap bootstrap = new ServerBootstrap();
-            bootstrap.group(bossGroup, workerGroup)
-                    .channel(NioServerSocketChannel.class)
-                    .childHandler(new ChannelInitializer<SocketChannel>() {
-                        @Override
-                        protected void initChannel(SocketChannel channel) throws Exception {
-                            channel.pipeline()
-                                    .addLast(new HttpServerCodec())
-                                    // 聚合http请求体（处理post请求体）
-                                    .addLast(new HttpObjectAggregator(65535))
-                                    .addLast(new WebSocketServerProtocolHandler(WEBSOCKET_PATH))
-                                    // fixme 数值将来改小
-                                    .addLast(new IdleStateHandler(600, 600, 600))
-                                    .addLast(new WebSocketHandler());
-                        }
-                    })
-                    .option(ChannelOption.SO_BACKLOG, 128)
-                    .childOption(ChannelOption.SO_KEEPALIVE, true);
-            bootstrap.bind(port).sync();
-            log.info("Game Server started on port:{}, path:{}", port, WEBSOCKET_PATH);
-        } finally {
-            shutdown();
-        }
+        ServerBootstrap bootstrap = new ServerBootstrap();
+        bootstrap.group(bossGroup, workerGroup)
+                .channel(NioServerSocketChannel.class)
+                .childHandler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel channel) throws Exception {
+                        channel.pipeline()
+                                .addLast(new HttpServerCodec())
+                                // 聚合http请求体（处理post请求体）
+                                .addLast(new HttpObjectAggregator(65535))
+                                .addLast(new WebSocketServerProtocolHandler(WEBSOCKET_PATH))
+                                // fixme 数值将来改小
+                                .addLast(new IdleStateHandler(600, 600, 600))
+                                .addLast(new WebSocketHandler());
+                    }
+                })
+                .option(ChannelOption.SO_BACKLOG, 128)
+                .childOption(ChannelOption.SO_KEEPALIVE, true);
+        bootstrap.bind(port).sync();
+        log.info("Game Server started on port:{}, path:{}", port, WEBSOCKET_PATH);
     }
 
 
