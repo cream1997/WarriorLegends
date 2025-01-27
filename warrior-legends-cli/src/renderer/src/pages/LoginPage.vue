@@ -23,6 +23,8 @@ const login = (event) => {
     password: password.value
   }).then((res) => {
     console.log(res);
+    // todo 带着token去建立ws连接
+
     // 跳转页面
     router.push("/home");
   });
