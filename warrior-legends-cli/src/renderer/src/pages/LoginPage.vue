@@ -24,9 +24,16 @@ const login = (event) => {
   }).then((res) => {
     console.log(res);
     // todo 带着token去建立ws连接
-
+    window.electron.ipcRenderer
+      .invoke("wsConnect", { token: "xx", id: "223" })
+      .then((res) => {
+        console.log("收到连接成功消息", res);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
     // 跳转页面
-    router.push("/home");
+    // router.push("/home");
   });
 };
 </script>

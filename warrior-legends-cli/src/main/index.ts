@@ -2,8 +2,9 @@ import { app, BrowserWindow, ipcMain, shell } from "electron";
 import { join } from "path";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
+import startup from "./MainProcessStartup";
 
-function createWindow(): void {
+function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
@@ -30,6 +31,8 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
   }
+
+  return mainWindow;
 }
 
 app.whenReady().then(() => {
@@ -42,7 +45,9 @@ app.whenReady().then(() => {
 
   ipcMain.on("ping", () => console.log("pong"));
 
-  createWindow();
+  const mainWin = createWindow();
+
+  startup(app, mainWin);
 
   app.on("activate", function () {
     // macOS特殊处理
