@@ -1,10 +1,13 @@
 package com.cream.warriorLegends.game.net;
 
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * @author cream
@@ -12,7 +15,16 @@ import lombok.extern.slf4j.Slf4j;
  * 2025/1/27 14:32
  */
 @Slf4j
+@ChannelHandler.Sharable
+@Component
 public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
+
+    private final MsgDispatcher msgDispatcher;
+
+    @Autowired
+    public WebSocketHandler(MsgDispatcher msgDispatcher) {
+        this.msgDispatcher = msgDispatcher;
+    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
@@ -27,9 +39,11 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
         log.info("客户端链接:{}",ctx.channel().id().asShortText());
     }
 
+
+
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) {
-        log.info("客户端断开: {}",ctx.channel().id().asShortText());
+        log.info("客户端断开: {}", ctx.channel().id().asShortText());
     }
 
     @Override
@@ -40,7 +54,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-        if(evt instanceof IdleStateEvent){
+        if (evt instanceof IdleStateEvent) {
             // 关闭空闲连接
             ctx.close();
         }

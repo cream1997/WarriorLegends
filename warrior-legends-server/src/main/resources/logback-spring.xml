@@ -58,6 +58,7 @@
     </appender>
 
     <logger name="com.cream.helper" level="debug"/>
+<!--    <logger name="io.netty" level="debug"/>-->
     <root level="info">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
