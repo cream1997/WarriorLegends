@@ -31,8 +31,7 @@ export default class GameWebSocket {
 
   // 初始化连接
   connect() {
-    // fixme 建立连接应该携带token和id
-    this.ws = new WebSocket(WS_CONFIG.URL, {
+    this.ws = new WebSocket(`WS_CONFIG.URL?id=${this.id}&token=${this.token}`, {
       perMessageDeflate: false,
       handshakeTimeout: 10000
     });
