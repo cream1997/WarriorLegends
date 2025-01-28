@@ -28,12 +28,12 @@ const login = (event) => {
       .invoke("wsConnect", { token: "xx", id: "223" })
       .then((res) => {
         console.log("收到连接成功消息", res);
+        // 跳转页面
+        router.push("/home");
       })
       .catch((err) => {
         console.error(err);
       });
-    // 跳转页面
-    // router.push("/home");
   });
 };
 </script>
