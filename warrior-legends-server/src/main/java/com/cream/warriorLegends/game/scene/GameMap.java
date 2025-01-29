@@ -2,20 +2,26 @@ package com.cream.warriorLegends.game.scene;
 
 import com.cream.warriorLegends.game.base.Role;
 import com.cream.warriorLegends.game.config.MapCfg;
+import com.cream.warriorLegends.game.msg.dto.res.LoginMapRes;
+import com.cream.warriorLegends.game.net.MsgDispatcher;
+import com.cream.warriorLegends.obj.common.position.SquareRange;
 import com.cream.warriorLegends.obj.common.position.Xy;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @Getter
 public class GameMap {
     private final int id;
     private final String name;
     private final int width;
     private final int height;
+    private final SquareRange defaultBornRange;
 
     private final Map<Xy, Point> allPoint = new HashMap<>();
     private final ConcurrentHashMap<Long, Role> allRole = new ConcurrentHashMap<>();
@@ -25,6 +31,8 @@ public class GameMap {
         this.name = mapCfg.getName();
         this.width = mapCfg.getWidth();
         this.height = mapCfg.getHeight();
+        // todo range的作用补充
+        this.defaultBornRange = new SquareRange(10, 10, 0);
         /*
          * 地图坐标左上角为原点
          */
@@ -37,5 +45,28 @@ public class GameMap {
                 this.allPoint.put(xy, point);
             }
         }
+    }
+
+    public void enterRole(Role role) {
+        if (allRole.containsKey(role.getId())) {
+            log.error("{}进入地图时，地图{}中已经存在该玩家", role.getNickNane(), this.name);
+        }
+        Point point = allPoint.get(defaultBornRange.getCenterXy());
+        if (point == null) {
+            log.error("进入地图时找不到点位");
+            return;
+        }
+        allRole.put(role.getId(), role);
+        point.addRole(role.getId());
+        log.info("{}进入{}", role.getNickNane(), this.name);
+
+        LoginMapRes loginMapRes = new LoginMapRes();
+        loginMapRes.setMapId(this.id);
+        loginMapRes.setMapName(this.name);
+        loginMapRes.setWidth(this.width);
+        loginMapRes.setHeight(this.height);
+        MsgDispatcher.sendMsg(role.getId(), loginMapRes);
+
+        // todo enterRole信息要群发给周围的所有人
     }
 }

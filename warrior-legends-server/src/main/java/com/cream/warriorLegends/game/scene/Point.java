@@ -1,14 +1,11 @@
 package com.cream.warriorLegends.game.scene;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
-/**
- * @author cream
- * Email:837800910@qq.com
- * 2025/1/27 23:11
- */
+@Slf4j
 public class Point {
     public final int x;
     public final int y;
@@ -16,11 +13,15 @@ public class Point {
 
     private final Set<Long> allRoleId = new HashSet<>();
 
-    public void addRole(long id){
+    public void addRole(long id) {
+        if (allRoleId.contains(id)) {
+            log.error("该点位已存在该玩家，id:{}", id);
+            return;
+        }
         allRoleId.add(id);
     }
 
-    public void removeRole(long id){
+    public void removeRole(long id) {
         allRoleId.remove(id);
     }
 

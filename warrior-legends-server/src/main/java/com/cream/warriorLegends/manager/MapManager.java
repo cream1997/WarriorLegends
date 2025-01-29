@@ -1,30 +1,36 @@
 package com.cream.warriorLegends.manager;
 
+import com.cream.warriorLegends.game.base.Role;
 import com.cream.warriorLegends.game.config.MapCfg;
 import com.cream.warriorLegends.game.scene.GameMap;
 import com.cream.warriorLegends.obj.common.position.Xy;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
-@Component()
+@Component
 public class MapManager {
 
-    private static MapManager INSTANCE;
-
     private final ConcurrentHashMap<Integer, GameMap> allMap = new ConcurrentHashMap<>();
+
+    private final GameMap mainCity;
 
     private void addMap(int id, GameMap map) {
         allMap.put(id, map);
     }
 
-    @PostConstruct
-    public void init() {
+    public MapManager() {
+        this.init();
+        this.mainCity = allMap.get(1);
+        Objects.requireNonNull(this.mainCity);
+    }
+
+    private void init() {
         List<MapCfg> mapCfgs = mockCfgs();
         for (MapCfg mapCfg : mapCfgs) {
             GameMap gameMap = new GameMap(mapCfg);
@@ -32,14 +38,6 @@ public class MapManager {
             log.info("创建地图:{}", gameMap.getName());
         }
 
-        INSTANCE = this;
-    }
-
-    public static MapManager getInstance() {
-        if (INSTANCE == null) {
-            log.error("获取实例为空");
-        }
-        return INSTANCE;
     }
 
     private List<MapCfg> mockCfgs() {
@@ -54,5 +52,10 @@ public class MapManager {
 
         mapCfgs.add(mapCfg);
         return mapCfgs;
+    }
+
+    public void loginMap(Role role) {
+        // fixme 进入默认地图
+        mainCity.enterRole(role);
     }
 }
