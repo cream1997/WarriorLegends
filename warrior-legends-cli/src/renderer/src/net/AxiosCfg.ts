@@ -8,12 +8,12 @@ const axiosInstance = axios.create({
   }
 });
 
-function post(
+function post<T>(
   url: string,
   data?: any,
   contentTypeIsJson: boolean = false,
   config?: AxiosRequestConfig
-): Promise<any> {
+): Promise<T> {
   if (contentTypeIsJson) {
     /**
      * 上面默认设置的是application/x-www-form-urlencoded;charset=UTF-8，
@@ -24,7 +24,7 @@ function post(
     config.headers = config.headers ? config.headers : {};
     config.headers["Content-Type"] = "application/json";
   }
-  return axiosInstance.post(url, data, config);
+  return axiosInstance.post(url, data, config).then((res) => res.data.data);
 }
 
 export { axiosInstance as axios, post };

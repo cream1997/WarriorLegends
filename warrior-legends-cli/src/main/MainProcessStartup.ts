@@ -6,14 +6,16 @@ export default function (
   mainWindow: Electron.BrowserWindow
 ) {
   ipcMain.handle("wsConnect", async (event, { id, token }) => {
+    console.log("wsConnect", id, token);
     const gameWebSocket: GameWebSocket = new GameWebSocket(id, token);
     try {
       await gameWebSocket.connect();
       gameWebSocket.onMsgCallback = (msg) => {
         mainWindow.webContents.send("wsMsg", msg);
       };
-      return "ok";
+      return "success";
     } catch (error) {
+      console.error(error);
       return "error";
     }
   });

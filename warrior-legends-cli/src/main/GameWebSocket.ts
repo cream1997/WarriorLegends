@@ -1,6 +1,5 @@
 // 配置参数
 import WebSocket from "ws";
-import { clearInterval } from "node:timers";
 
 const WS_CONFIG = {
   URL: "ws://127.0.0.1:8889/ws",
@@ -31,10 +30,13 @@ export default class GameWebSocket {
 
   // 初始化连接
   connect() {
-    this.ws = new WebSocket(`WS_CONFIG.URL?id=${this.id}&token=${this.token}`, {
-      perMessageDeflate: false,
-      handshakeTimeout: 10000
-    });
+    this.ws = new WebSocket(
+      `${WS_CONFIG.URL}?id=${this.id}&token=${this.token}`,
+      {
+        perMessageDeflate: false,
+        handshakeTimeout: 10000
+      }
+    );
     // 事件绑定
     this.ws
       .on("message", (data) => this.handleMessage(data))
@@ -46,7 +48,7 @@ export default class GameWebSocket {
     return new Promise((resolve, reject) => {
       this.ws.on("error", (error) => {
         console.error("[WS] Connection error:", error);
-        reject();
+        reject(error);
       });
       this.ws.on("open", () => {
         console.log("[WS] Connected to game server");

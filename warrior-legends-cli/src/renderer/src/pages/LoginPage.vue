@@ -21,15 +21,19 @@ const login = (event) => {
   post("/account/login", {
     username: username.value,
     password: password.value
-  }).then((res) => {
-    console.log(res);
+  }).then((res: any) => {
+    console.log("登录成功相应", res);
     // todo 带着token去建立ws连接
     window.electron.ipcRenderer
-      .invoke("wsConnect", { token: "xx", id: "223" })
+      .invoke("wsConnect", { token: res.token, id: res.id })
       .then((res) => {
-        console.log("收到连接成功消息", res);
-        // 跳转页面
-        router.push("/home");
+        if (res === "success") {
+          console.log("ws连接成功");
+          // 跳转页面
+          router.push("/home");
+        } else {
+          console.log("ws连接失败");
+        }
       })
       .catch((err) => {
         console.error(err);
