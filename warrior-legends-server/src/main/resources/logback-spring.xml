@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <!--定义变量-->
-    <property name="LOG_DIR" value="D:\tmp\WarriorLegends\log\"/>
+    <property name="LOG_DIR" value="R:\MyTemp\WarriorLegends\log\"/>
     <property name="BASE_LOG_FILE_NAME" value="base.log"/>
     <!--这个日志只包含错误日志-->
     <property name="ERROR_LOG_FILE_NAME" value="error.log"/>
