@@ -3,16 +3,16 @@ package com.cream.warriorLegends.utils.bean;
 import com.alibaba.fastjson2.JSON;
 import com.cream.warriorLegends.mapper.ChunkDataMapper;
 import com.cream.warriorLegends.game.base.Role;
+import com.cream.warriorLegends.obj.entity.DataChunk;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 
-/**
- * @author cream
- * Email:837800910@qq.com
- * 2025/1/27 22:01
- */
+@Slf4j
+@Data
 @Component
 public class DbTool {
 
@@ -41,7 +41,12 @@ public class DbTool {
     }
 
     private <T> T selectChunkData(String tableName, long id, Class<T> clazz) {
-        byte[] data = chunkDataMapper.selectChunkData(tableName, id);
+        DataChunk dataChunk = chunkDataMapper.selectChunkData(tableName, id);
+        if (dataChunk == null) {
+            log.error("查询数据为空,tableName:{},id:{}", tableName, id);
+            return null;
+        }
+        byte[] data = dataChunk.getData();
         return parse(data, clazz);
     }
 

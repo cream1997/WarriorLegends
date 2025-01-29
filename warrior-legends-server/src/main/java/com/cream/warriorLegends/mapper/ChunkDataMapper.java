@@ -1,5 +1,6 @@
 package com.cream.warriorLegends.mapper;
 
+import com.cream.warriorLegends.obj.entity.DataChunk;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -11,7 +12,7 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface ChunkDataMapper {
 
-    byte[] selectChunkData(@Param("tableName") String tableName, @Param("id") long id);
+    DataChunk selectChunkData(@Param("tableName") String tableName, @Param("id") long id);
 
     void insertChunkData(@Param("tableName") String tableName, long id, byte[] data);
 

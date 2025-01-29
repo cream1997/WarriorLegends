@@ -2,19 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.cream.warriorLegends.mapper.ChunkDataMapper">
     <insert id="insertChunkData">
-        insert into #{tableName}(id, data)
+        insert into ${tableName}(id, data)
         values (#{id}, #{data})
     </insert>
 
     <update id="updateChunkData">
-        update #{tableName}
+        update ${tableName}
         set data = #{data}
         where id = #{id}
     </update>
 
-    <select id="selectChunkData">
+    <select id="selectChunkData" resultType="com.cream.warriorLegends.obj.entity.DataChunk">
         select data
-        from #{tableName}
+        from ${tableName}
         where id = #{id}
     </select>
 </mapper>
