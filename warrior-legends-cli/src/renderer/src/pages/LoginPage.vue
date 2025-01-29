@@ -22,8 +22,7 @@ const login = (event) => {
     username: username.value,
     password: password.value
   }).then((res: any) => {
-    console.log("登录成功相应", res);
-    // todo 带着token去建立ws连接
+    // 带着token去建立ws连接
     window.electron.ipcRenderer
       .invoke("wsConnect", { token: res.token, id: res.id })
       .then((res) => {

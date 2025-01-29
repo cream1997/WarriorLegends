@@ -6,6 +6,9 @@ export default {
 <script setup lang="ts">
 import { Player } from "@/interface/Player";
 import { onMounted, reactive, ref } from "vue";
+import useGameMapComponentHooks from "@/component/map/useGameMapComponentHooks";
+
+useGameMapComponentHooks();
 
 const me: Player = {
   id: "1",

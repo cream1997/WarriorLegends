@@ -13,6 +13,7 @@ import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,12 +26,14 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class TokenValidator extends ChannelInboundHandlerAdapter {
 
-    public static final AttributeKey<String> ID_KEY = AttributeKey.newInstance("idKey");
-
+    public static final AttributeKey<Long> ID_KEY = AttributeKey.newInstance("idKey");
     // 缓存是线程安全的
     private final Cache<Long, String> id2TokenCache;
+    private final MsgDispatcher msgDispatcher;
 
-    public TokenValidator() {
+    @Autowired
+    public TokenValidator(MsgDispatcher msgDispatcher) {
+        this.msgDispatcher = msgDispatcher;
         this.id2TokenCache = CacheBuilder.newBuilder()
                 // fixme 100会不会有点小?
                 .maximumSize(100)
@@ -38,15 +41,12 @@ public class TokenValidator extends ChannelInboundHandlerAdapter {
                 .build();
     }
 
-    public void setTokenCache(Long id, String token) {
+    public void setTokenCache(long id, String token) {
         id2TokenCache.put(id, token);
     }
 
-    public String getTokenCache(String id) {
-        if (!NumberUtils.isCreatable(id)) { //不是数字说明传来的值不合法
-            return null;
-        }
-        return id2TokenCache.getIfPresent(Long.valueOf(id));
+    public String getTokenCache(long id) {
+        return id2TokenCache.getIfPresent(id);
     }
 
     @Override
@@ -65,7 +65,10 @@ public class TokenValidator extends ChannelInboundHandlerAdapter {
             ctx.close();
             return;
         }
-        String id = ids.getFirst();
+        long id = 0;
+        if (NumberUtils.isCreatable(ids.getFirst())) { //不是数字说明传来的值不合法
+            id = Long.parseLong(ids.getFirst());
+        }
         String token = tokens.getFirst();
         String tokenCache = getTokenCache(id);
         if (tokenCache == null || !Objects.equals(token, tokenCache)) {
@@ -74,8 +77,9 @@ public class TokenValidator extends ChannelInboundHandlerAdapter {
             return;
         }
         //验证成功
-        Attribute<String> attr = ctx.channel().attr(ID_KEY);
+        Attribute<Long> attr = ctx.channel().attr(ID_KEY);
         attr.set(id);
+        this.msgDispatcher.putChannel(ctx.channel());
         ctx.fireChannelRead(msg);
     }
 

@@ -5,9 +5,9 @@ export default function (
   app: Electron.App,
   mainWindow: Electron.BrowserWindow
 ) {
+  let gameWebSocket: GameWebSocket;
   ipcMain.handle("wsConnect", async (event, { id, token }) => {
-    console.log("wsConnect", id, token);
-    const gameWebSocket: GameWebSocket = new GameWebSocket(id, token);
+    gameWebSocket = new GameWebSocket(id, token);
     try {
       await gameWebSocket.connect();
       gameWebSocket.onMsgCallback = (msg) => {
@@ -18,5 +18,9 @@ export default function (
       console.error(error);
       return "error";
     }
+  });
+
+  ipcMain.on("sendMsg", (event, msg) => {
+    gameWebSocket && gameWebSocket.send(msg);
   });
 }

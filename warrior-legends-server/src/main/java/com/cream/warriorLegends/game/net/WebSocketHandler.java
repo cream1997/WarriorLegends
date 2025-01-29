@@ -1,5 +1,6 @@
 package com.cream.warriorLegends.game.net;
 
+import com.alibaba.fastjson2.JSON;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -29,22 +30,24 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
         log.info("Received message: {}", msg.text());
-        // 处理接收到的消息，这里简单返回一个响应
-        ctx.writeAndFlush(new TextWebSocketFrame("Message received: " + msg.text()));
+        Object parseMsg = JSON.parse(msg.text());
+        long id = ctx.channel().attr(TokenValidator.ID_KEY).get();
+        this.msgDispatcher.dispatch(id, parseMsg);
     }
 
     @Override
-    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-//        log.info("客户端链接:{}",ctx.channel().remoteAddress());
-        log.info("客户端链接:{}",ctx.channel().id().asShortText());
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        log.info("客户端链接:{}", ctx.channel().id().asShortText());
+        super.channelActive(ctx);
     }
 
-
-
     @Override
-    public void handlerRemoved(ChannelHandlerContext ctx) {
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.info("客户端断开: {}", ctx.channel().id().asShortText());
+        this.msgDispatcher.removeChannel(ctx.channel());
+        super.channelInactive(ctx);
     }
+
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {

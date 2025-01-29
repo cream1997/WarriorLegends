@@ -1,13 +1,14 @@
-type MsgListener = (msg) => void;
+type MsgListener = (msg: any) => void;
+import { ResMsgType } from "@/ts/MsgReceiver";
 
 class MsgDispatcher {
-  private msgType2Listeners: Map<number, MsgListener[]>;
+  private msgType2Listeners: Map<ResMsgType, MsgListener[]>;
 
   constructor() {
     this.msgType2Listeners = new Map();
   }
 
-  addMsgListener(msgType: number, listener: MsgListener) {
+  addMsgListener(msgType: ResMsgType, listener: MsgListener) {
     let listenerList = this.msgType2Listeners.get(msgType);
     if (!listenerList) {
       listenerList = [];
@@ -25,10 +26,7 @@ class MsgDispatcher {
       listener(msg);
     }
   }
-
-  sendMsg(msg) {
-    window.electron.ipcRenderer.send("sendMsg", { msg });
-  }
 }
 
-export default new MsgDispatcher();
+const msgDispatcher = new MsgDispatcher();
+export default msgDispatcher;
