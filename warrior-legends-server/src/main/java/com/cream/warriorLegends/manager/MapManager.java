@@ -15,6 +15,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component()
 public class MapManager {
 
+    private static MapManager INSTANCE;
+
     private final ConcurrentHashMap<Integer, GameMap> allMap = new ConcurrentHashMap<>();
 
     private void addMap(int id, GameMap map) {
@@ -29,8 +31,16 @@ public class MapManager {
             this.addMap(gameMap.getId(), gameMap);
             log.info("创建地图:{}", gameMap.getName());
         }
+
+        INSTANCE = this;
     }
 
+    public static MapManager getInstance() {
+        if (INSTANCE == null) {
+            log.error("获取实例为空");
+        }
+        return INSTANCE;
+    }
 
     private List<MapCfg> mockCfgs() {
         List<MapCfg> mapCfgs = new ArrayList<>();

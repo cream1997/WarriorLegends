@@ -1,6 +1,7 @@
 package com.cream.warriorLegends.game.net;
 
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -30,7 +31,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
         log.info("Received message: {}", msg.text());
-        Object parseMsg = JSON.parse(msg.text());
+        JSONObject parseMsg = (JSONObject) JSON.parse(msg.text());
         long id = ctx.channel().attr(TokenValidator.ID_KEY).get();
         this.msgDispatcher.dispatch(id, parseMsg);
     }
