@@ -36,10 +36,12 @@ public class GameServer {
     private static final String WEBSOCKET_PATH = "/ws";
 
     private final WebSocketHandler webSocketHandler;
+    private final TokenValidator tokenValidator;
 
     @Autowired
-    public GameServer(WebSocketHandler webSocketHandler) {
+    public GameServer(WebSocketHandler webSocketHandler, TokenValidator tokenValidator) {
         this.webSocketHandler = webSocketHandler;
+        this.tokenValidator = tokenValidator;
     }
 
     @PostConstruct
@@ -52,15 +54,15 @@ public class GameServer {
         bootstrap.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
                 //似乎只需要在logback中配置就好，这里好像不需要加
-//                .handler(new LoggingHandler(LogLevel.DEBUG))
+                //.handler(new LoggingHandler(LogLevel.DEBUG))
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel channel) throws Exception {
                         channel.pipeline()
                                 .addLast(new HttpServerCodec())
-                                // 聚合http请求体（处理post请求体）
-                                .addLast(new HttpObjectAggregator(65535))
-//                                .addLast(new WebSocketServerProtocolHandler(WEBSOCKET_PATH, null, true, 64 * 1024, true, true, 10000))
+                                .addLast(new HttpObjectAggregator(65535)) // 聚合http请求体（处理post请求体）
+                                .addLast(tokenValidator) //在握手之前验证token
+                                //.addLast(new WebSocketServerProtocolHandler(WEBSOCKET_PATH, null, true, 64 * 1024, true, true, 10000))
                                 .addLast(new WebSocketServerProtocolHandler(WEBSOCKET_PATH, true))
                                 // fixme 数值将来改小
                                 .addLast(new IdleStateHandler(600, 600, 600))

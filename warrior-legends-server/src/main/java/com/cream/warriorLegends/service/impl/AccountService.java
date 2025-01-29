@@ -1,6 +1,7 @@
 package com.cream.warriorLegends.service.impl;
 
 import com.cream.warriorLegends.common.exception.TipErr;
+import com.cream.warriorLegends.game.net.TokenValidator;
 import com.cream.warriorLegends.mapper.AccountMapper;
 import com.cream.warriorLegends.obj.entity.Account;
 import com.cream.warriorLegends.obj.vo.LoginRes;
@@ -13,10 +14,12 @@ import org.springframework.stereotype.Service;
 public class AccountService implements IAccountService {
 
     private final AccountMapper accountMapper;
+    private final TokenValidator tokenValidator;
 
     @Autowired
-    public AccountService(AccountMapper accountMapper) {
+    public AccountService(AccountMapper accountMapper, TokenValidator tokenValidator) {
         this.accountMapper = accountMapper;
+        this.tokenValidator = tokenValidator;
     }
 
     @Override
@@ -41,6 +44,8 @@ public class AccountService implements IAccountService {
         }
 
         // todo 生成token
-        return new LoginRes(account.getId(), account.getUsername(), "token");
+        String token = "xxxx";
+        this.tokenValidator.setTokenCache(account.getId(), token);
+        return new LoginRes(account.getId(), account.getUsername(), token);
     }
 }
