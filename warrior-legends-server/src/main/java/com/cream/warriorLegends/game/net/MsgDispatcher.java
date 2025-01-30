@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -30,16 +29,11 @@ public class MsgDispatcher {
     }
 
     public void putChannel(Channel channel) {
-        Long id = channel.attr(TokenValidator.ID_KEY).get();
-        Objects.requireNonNull(id);
-        ID2CHANNEL.put(id, channel);
+        ID2CHANNEL.put(TokenValidator.getIdAfterLogin(channel), channel);
     }
 
     public void removeChannel(Channel channel) {
-        Long id = channel.attr(TokenValidator.ID_KEY).get();
-        if (id != null) {
-            ID2CHANNEL.remove(id);
-        }
+        ID2CHANNEL.remove(TokenValidator.getIdAfterLogin(channel));
     }
 
     public void dispatch(long id, JSONObject receiveMsg) {

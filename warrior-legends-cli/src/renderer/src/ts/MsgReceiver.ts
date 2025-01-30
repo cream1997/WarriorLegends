@@ -6,7 +6,7 @@ export enum ResMsgType {
 }
 
 class MsgReceiver {
-  onReceiveEnterMap(callback: (loginMapRes: LoginMapRes) => void) {
+  onReceiveEnterMap(callback: (msgData: LoginMapRes, msgType: number) => void) {
     msgDispatcher.addMsgListener(ResMsgType.LoginMap, callback);
   }
 }

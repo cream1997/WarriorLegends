@@ -11,11 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- * @author cream
- * Email:837800910@qq.com
- * 2025/1/27 14:32
- */
 @Slf4j
 @ChannelHandler.Sharable
 @Component
@@ -32,7 +27,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
         log.info("Received message: {}", msg.text());
         JSONObject parseMsg = (JSONObject) JSON.parse(msg.text());
-        long id = ctx.channel().attr(TokenValidator.ID_KEY).get();
+        long id = TokenValidator.getIdAfterLogin(ctx.channel());
         this.msgDispatcher.dispatch(id, parseMsg);
     }
 
@@ -60,7 +55,9 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
             // 关闭空闲连接
-            ctx.close();
+            log.info("连接空闲:{}",TokenValidator.getIdAfterLogin(ctx.channel()));
+            // todo 将来加入心跳机制后方法注释
+//            ctx.close();
         }
     }
 }

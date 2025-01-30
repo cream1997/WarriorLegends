@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class TokenValidator extends ChannelInboundHandlerAdapter {
 
-    public static final AttributeKey<Long> ID_KEY = AttributeKey.newInstance("idKey");
+    private static final AttributeKey<Long> ID_KEY = AttributeKey.newInstance("idKey");
     // 缓存是线程安全的
     private final Cache<Long, String> id2TokenCache;
     private final MsgDispatcher msgDispatcher;
@@ -39,6 +39,15 @@ public class TokenValidator extends ChannelInboundHandlerAdapter {
                 .maximumSize(100)
                 .expireAfterWrite(10, TimeUnit.SECONDS)
                 .build();
+    }
+
+    public static long getIdAfterLogin(Channel channel) {
+        Attribute<Long> attr = channel.attr(ID_KEY);
+        if (attr == null || attr.get() == null) {
+            log.error("获取id为空，channel:{}", channel);
+            return 0;
+        }
+        return attr.get();
     }
 
     public void setTokenCache(long id, String token) {

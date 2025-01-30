@@ -1,4 +1,4 @@
-type MsgListener = (msg: any) => void;
+type MsgListener = (data: any, msgType: number) => void;
 import { ResMsgType } from "@/ts/MsgReceiver";
 
 class MsgDispatcher {
@@ -25,7 +25,7 @@ class MsgDispatcher {
       return;
     }
     for (const listener of listenerList) {
-      listener(msg);
+      listener(msg.data, msg.msgType);
     }
   }
 }
