@@ -9,9 +9,11 @@ class MsgDispatcher {
   }
 
   addMsgListener(msgType: ResMsgType, listener: MsgListener) {
+    console.log("执行");
     let listenerList = this.msgType2Listeners.get(msgType);
     if (!listenerList) {
       listenerList = [];
+      this.msgType2Listeners.set(msgType, listenerList);
     }
     listenerList.push(listener);
   }

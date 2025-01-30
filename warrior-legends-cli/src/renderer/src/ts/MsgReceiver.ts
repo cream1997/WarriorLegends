@@ -1,12 +1,13 @@
 import msgDispatcher from "@/ts/MsgDispatcher";
+import { LoginMapRes } from "@/interface/res/LoginMapRes";
 
 export enum ResMsgType {
-  EnterMap = 1
+  LoginMap = 1
 }
 
 class MsgReceiver {
-  onReceiveEnterMap(callback: (msg: any) => void) {
-    msgDispatcher.addMsgListener(ResMsgType.EnterMap, callback);
+  onReceiveEnterMap(callback: (loginMapRes: LoginMapRes) => void) {
+    msgDispatcher.addMsgListener(ResMsgType.LoginMap, callback);
   }
 }
 

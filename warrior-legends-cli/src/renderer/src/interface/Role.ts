@@ -1,4 +1,4 @@
-export interface Player {
+export interface Role {
   id: string;
   name: string;
   x: number;

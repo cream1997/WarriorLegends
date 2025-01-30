@@ -4,20 +4,24 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { Player } from "@/interface/Player";
+import { Role } from "@/interface/Role";
 import { onMounted, reactive, ref } from "vue";
 import useGameMapComponentHooks from "@/component/map/useGameMapComponentHooks";
+import msgReceiver from "@/ts/MsgReceiver";
 
+msgReceiver.onReceiveEnterMap((loginMapRes) => {
+  console.log("收到LoginMapRes", loginMapRes);
+});
 useGameMapComponentHooks();
 
-const me: Player = {
+const me: Role = {
   id: "1",
   name: "test",
   x: 50,
   y: 50
 };
 
-const objList = reactive<Player[]>([me]);
+const objList = reactive<Role[]>([me]);
 
 const oneGridPx = 30;
 
