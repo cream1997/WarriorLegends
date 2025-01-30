@@ -5,13 +5,14 @@ import com.cream.warriorLegends.game.msg.dto.BaseRes;
 import lombok.Setter;
 
 @Setter
-public class LoginMapRes extends BaseRes {
+public class LoginMapRes implements BaseRes {
     private int mapId;
     private String mapName;
     private int width;
     private int height;
 
-    public LoginMapRes() {
-        super(ResMsgType.LoginMap);
+    @Override
+    public ResMsgType msgType() {
+        return ResMsgType.LoginMap;
     }
 }

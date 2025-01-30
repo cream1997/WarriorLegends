@@ -2,11 +2,7 @@ package com.cream.warriorLegends.game.msg.dto;
 
 import com.cream.warriorLegends.game.msg.base.ResMsgType;
 
-public abstract class BaseRes {
+public interface BaseRes {
 
-    private final int msgType;
-
-    public BaseRes(ResMsgType msgType) {
-        this.msgType = msgType.val;
-    }
+    ResMsgType msgType();
 }
