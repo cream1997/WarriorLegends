@@ -3,6 +3,7 @@ package com.cream.warriorLegends.game.net;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSONWriter;
 import com.cream.warriorLegends.game.msg.base.MsgProcessor;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
@@ -71,6 +72,6 @@ public class MsgDispatcher {
 
     public static void sendMsg(long id, Object msg) {
         Channel channel = ID2CHANNEL.get(id);
-        channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(msg)));
+        channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(msg, JSONWriter.Feature.FieldBased)));
     }
 }

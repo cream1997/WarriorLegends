@@ -4,9 +4,9 @@ import com.cream.warriorLegends.game.msg.base.ResMsgType;
 
 public abstract class BaseRes {
 
-    private final int resMsgType;
+    private final int msgType;
 
-    public BaseRes(ResMsgType resMsgType) {
-        this.resMsgType = resMsgType.val;
+    public BaseRes(ResMsgType msgType) {
+        this.msgType = msgType.val;
     }
 }
