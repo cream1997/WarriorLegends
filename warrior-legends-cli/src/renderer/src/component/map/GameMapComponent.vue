@@ -8,23 +8,51 @@ import { nextTick, onMounted, reactive, ref } from "vue";
 import useGameMapComponentHooks from "@/component/map/useGameMapComponentHooks";
 import msgReceiver from "@/ts/MsgReceiver";
 import { LoginMapRes } from "@/interface/res/LoginMapRes";
+import Role from "@/interface/Role";
 
 useGameMapComponentHooks();
 
-const oneGridPx = 36;
+const gridSize = 50;
 
-const mapMeta = ref<LoginMapRes | null>();
+const mapMeta = ref<LoginMapRes>();
 const mapRef = ref<HTMLDivElement>();
+let roleSelf: Role;
+
+function initMap() {
+  if (mapRef.value && mapMeta.value) {
+    roleSelf = mapMeta.value.role;
+    const mapWidth = mapMeta.value!.width * gridSize;
+    const mapHeight = mapMeta.value!.height * gridSize;
+    mapRef.value.style.width = mapWidth + "px";
+    mapRef.value.style.height = mapHeight + "px";
+    // 定位地图位置
+    const roleX = roleSelf.xy.x * gridSize;
+    const roleY = roleSelf.xy.y * gridSize;
+    let leftOffset = window.innerWidth / 2 - roleX;
+    let topOffset = window.innerHeight / 2 - roleY;
+    if (leftOffset > 0) {
+      leftOffset = 0;
+    }
+    if (leftOffset < -mapWidth) {
+      leftOffset = -mapWidth;
+    }
+    if (topOffset > 0) {
+      topOffset = 0;
+    }
+    if (topOffset < -mapHeight) {
+      topOffset = -mapHeight;
+    }
+    mapRef.value.style.left = leftOffset + "px";
+    mapRef.value.style.top = topOffset + "px";
+  }
+}
 
 onMounted(() => {
   msgReceiver.onReceiveEnterMap((loginMapRes: LoginMapRes) => {
     mapMeta.value = loginMapRes;
     // 初始化地图
     nextTick(() => {
-      if (mapRef.value) {
-        mapRef.value.style.width = mapMeta.value!.width * oneGridPx + "px";
-        mapRef.value.style.height = mapMeta.value!.height * oneGridPx + "px";
-      }
+      initMap();
     });
   });
 });
@@ -43,6 +71,7 @@ onMounted(() => {
         })"
         :key="columnIndex"
         class="grid"
+        :style="{ width: gridSize + 'px', height: gridSize + 'px' }"
       ></div>
     </div>
   </div>
@@ -51,8 +80,8 @@ onMounted(() => {
 <style scoped>
 .map {
   position: fixed;
-  width: 80vw;
-  height: 80vh;
+  width: 100vw;
+  height: 100vh;
   background: green;
 }
 
@@ -63,8 +92,6 @@ onMounted(() => {
 
 .grid {
   display: inline-block;
-  width: 30px;
-  height: 30px;
   border: 1px solid black;
 }
 </style>

@@ -85,10 +85,10 @@ onMounted(() => {
 
 <style scoped>
 .obj {
-  position: fixed;
+  position: absolute;
   display: inline-block;
-  width: 30px;
-  height: 30px;
+  width: 50px;
+  height: 50px;
   background: red;
   border: 1px solid black;
   border-radius: 50%;
