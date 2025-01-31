@@ -4,6 +4,7 @@ import com.cream.warriorLegends.game.base.Role;
 import com.cream.warriorLegends.game.config.MapCfg;
 import com.cream.warriorLegends.game.msg.dto.res.EnterMapRes;
 import com.cream.warriorLegends.game.msg.dto.res.LoginMapRes;
+import com.cream.warriorLegends.game.msg.dto.res.WalkRes;
 import com.cream.warriorLegends.game.net.MsgDispatcher;
 import com.cream.warriorLegends.obj.common.position.SquareRange;
 import com.cream.warriorLegends.obj.common.position.Xy;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
@@ -43,21 +45,41 @@ public class GameMap {
                 Xy xy = new Xy(j, i);
                 boolean isBlock = blockXy.contains(xy);
                 Point point = new Point(j, i, isBlock);
-                this.allPoint.put(xy, point);
+                putPoint(xy, point);
             }
         }
     }
 
-    public void enterRole(Role role) {
+    private void putPoint(Xy xy, Point point) {
+        if (this.allPoint.containsKey(xy)) {
+            log.error("重复放置点位，mapId:{},mapName:{},xy:{}", this.id, this.name, xy);
+            return;
+        }
+        this.allPoint.put(xy, point);
+    }
+
+    private Point getPointNoNull(Xy xy) {
+        Point point = this.allPoint.get(xy);
+        Objects.requireNonNull(point);
+        return point;
+    }
+
+    private Role getRoleNoNull(long rid) {
+        Role role = this.allRole.get(rid);
+        Objects.requireNonNull(role);
+        return role;
+    }
+
+    private void putRole(Role role) {
         if (allRole.containsKey(role.getId())) {
             log.error("{}进入地图时，地图{}中已经存在该玩家", role.getNickNane(), this.name);
         }
-        Point point = allPoint.get(defaultBornRange.getCenterXy());
-        if (point == null) {
-            log.error("进入地图时找不到点位");
-            return;
-        }
-        allRole.put(role.getId(), role);
+        this.allRole.put(role.getId(), role);
+    }
+
+    public void enterRole(Role role) {
+        Point point = getPointNoNull(defaultBornRange.getCenterXy());
+        putRole(role);
         point.addRole(role);
         role.setMapId(this.id);
         log.info("{}进入{}", role.getNickNane(), this.name);
@@ -77,19 +99,32 @@ public class GameMap {
     }
 
     public void removeRole(long id) {
-        Role role = allRole.get(id);
-        if (role == null) {
-            log.error("地图中不存在该玩家,id:{}", id);
-            return;
-        }
+        Role role = getRoleNoNull(id);
         allRole.remove(id);
-        Point point = allPoint.get(role.getXy());
-        if (point == null) {
-            log.error("未找到对应点位");
-            return;
-        }
+        Point point = getPointNoNull(role.getXy());
         point.removeRole(id);
 
         // todo 同步信息给周围人
+    }
+
+    public void walk(long id, Xy newXy) {
+        Role role = getRoleNoNull(id);
+        Xy oldXy = role.getXy();
+        Objects.requireNonNull(oldXy);
+        if (newXy.x < 0 || newXy.y < 0 || newXy.x > width - 1 || newXy.y > height - 1) {
+            log.error("请求坐标错误，超出地图范围,id:{}", id);
+            return;
+        }
+        if (Math.abs(newXy.x - oldXy.x) != 1 && Math.abs(newXy.y - oldXy.y) != 1) {
+            log.error("请求坐标错误,id:{}", id);
+            return;
+        }
+        Point oldPoint = getPointNoNull(role.getXy());
+        oldPoint.removeRole(role.getId());
+        Point newPoint = getPointNoNull(newXy);
+        newPoint.addRole(role);
+        // todo 同步消息给周围的人
+        WalkRes walkRes = new WalkRes(id, newXy.x, newXy.y);
+        MsgDispatcher.sendMsg(id, walkRes);
     }
 }

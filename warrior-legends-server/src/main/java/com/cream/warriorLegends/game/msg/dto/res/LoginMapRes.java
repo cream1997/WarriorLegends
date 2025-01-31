@@ -2,7 +2,7 @@ package com.cream.warriorLegends.game.msg.dto.res;
 
 import com.cream.warriorLegends.game.base.Role;
 import com.cream.warriorLegends.game.msg.base.ResMsgType;
-import com.cream.warriorLegends.game.msg.dto.BaseRes;
+import com.cream.warriorLegends.game.msg.base.BaseRes;
 import lombok.Setter;
 
 @Setter

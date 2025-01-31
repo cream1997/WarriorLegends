@@ -26,25 +26,31 @@ public class MapManager {
     public MapManager(DbTool dbTool) {
         this.dbTool = dbTool;
         this.init();
-        this.mainCity = allMap.get(1);
+        this.mainCity = getMapNoNull(1);
         Objects.requireNonNull(this.mainCity);
     }
 
-    public static void putRole(Role role) {
+    public GameMap getMapNoNull(int mapId) {
+        GameMap gameMap = this.allMap.get(mapId);
+        Objects.requireNonNull(gameMap);
+        return gameMap;
+    }
+
+    public void putRole(Role role) {
         allRole.put(role.getId(), role);
     }
 
-    public static Role getRole(long id) {
+    public Role getRole(long id) {
         return allRole.get(id);
     }
 
-    public static Role getRoleNoNull(long id) {
+    public Role getRoleNoNull(long id) {
         Role role = allRole.get(id);
         Objects.requireNonNull(role);
         return role;
     }
 
-    public static void removeRole(long id) {
+    public void removeRole(long id) {
         allRole.remove(id);
     }
 
@@ -55,7 +61,11 @@ public class MapManager {
             this.addMap(gameMap.getId(), gameMap);
             log.info("创建地图:{}", gameMap.getName());
         }
+    }
 
+    public GameMap getMapByRid(long rid) {
+        Role role = getRoleNoNull(rid);
+        return getMapNoNull(role.getMapId());
     }
 
     private void addMap(int id, GameMap map) {

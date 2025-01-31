@@ -5,7 +5,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONWriter;
 import com.cream.warriorLegends.game.msg.base.MsgProcessor;
-import com.cream.warriorLegends.game.msg.dto.BaseRes;
+import com.cream.warriorLegends.game.msg.base.BaseRes;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;

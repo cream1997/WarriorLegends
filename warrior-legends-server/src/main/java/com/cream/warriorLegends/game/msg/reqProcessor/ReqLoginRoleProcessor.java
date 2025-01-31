@@ -1,4 +1,4 @@
-package com.cream.warriorLegends.game.msg;
+package com.cream.warriorLegends.game.msg.reqProcessor;
 
 import com.cream.warriorLegends.game.base.Role;
 import com.cream.warriorLegends.game.msg.base.MsgProcessor;
@@ -11,20 +11,20 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class ReqLoginRole extends MsgProcessor<Void> {
+public class ReqLoginRoleProcessor extends MsgProcessor<Void> {
 
     private final RoleManager roleManager;
     private final MapManager mapManager;
 
     @Autowired
-    public ReqLoginRole(RoleManager roleManager, MapManager mapManager) {
+    public ReqLoginRoleProcessor(RoleManager roleManager, MapManager mapManager) {
         this.roleManager = roleManager;
         this.mapManager = mapManager;
     }
 
     @Override
-    public void process(long id) {
-        Role role = roleManager.getRole(id);
+    public void process(long rid) {
+        Role role = roleManager.getRole(rid);
         mapManager.loginMap(role);
     }
 

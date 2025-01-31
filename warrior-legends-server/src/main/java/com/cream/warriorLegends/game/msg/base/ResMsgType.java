@@ -10,6 +10,7 @@ import java.util.Map;
 public enum ResMsgType {
     LoginMap(1),
     EnterMap(2),
+    WalkRes(3),
     ;
 
     public final int val;

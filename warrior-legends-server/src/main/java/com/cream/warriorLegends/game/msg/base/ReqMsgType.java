@@ -8,7 +8,10 @@ import java.util.Map;
 
 @Slf4j
 public enum ReqMsgType {
-    LoginRole(1);
+    LoginRole(1),
+    Walk(2),
+
+    ;
 
     public final int val;
 

@@ -8,10 +8,10 @@ import java.lang.reflect.Type;
 
 public abstract class MsgProcessor<T> {
 
-    public void process(long id, @NonNull T data) {
+    public void process(long rid, @NonNull T data) {
     }
 
-    public void process(long id) {
+    public void process(long rid) {
     }
 
     public abstract ReqMsgType matchType();
