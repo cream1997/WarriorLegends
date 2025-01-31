@@ -5,9 +5,11 @@ import { EnterMapRes, LoginMapRes } from "@/interface/res/ResInterface";
 import msgReceiver from "@/net/ws/MsgReceiver";
 import msgSender from "@/net/ws/MsgSender";
 import { WalkReq } from "@/interface/req/ReqInterface";
+import moveFunction from "@/component/common/moveFunction";
 
 interface PropsType {
   metaInfo: LoginMapRes;
+  mapDiv: HTMLElement;
 }
 
 const props = defineProps<PropsType>();
@@ -21,20 +23,6 @@ msgReceiver.onReceiveEnterMap((enterMapRes: EnterMapRes) => {
   const enterRole = enterMapRes.role;
   objList.push(enterRole);
 });
-
-function moveMap() {
-  if (self) {
-    // const rect = self.getBoundingClientRect();
-    // const selfCenterLeft = rect.left + rect.width / 2;
-    // const selfCenterTop = rect.top + rect.height / 2;
-    // const mapLeft = selfCenterLeft - me.x;
-    // const mapTop = selfCenterTop - me.y;
-    // if (mapRef.value) {
-    //   mapRef.value.style.left = mapLeft + "px";
-    //   mapRef.value.style.top = mapTop + "px";
-    // }
-  }
-}
 
 let canMove = true;
 
@@ -80,47 +68,32 @@ msgReceiver.onReceiveWalk((walkRes) => {
   }
 });
 
-function moveSelf(newX: number, oldX: number, newY: number, oldY: number) {
-  const selfDiv = document.getElementById(self.id);
-  //200ms移动一格子（50px）;1ms 0.25px; 4ms 1px; 20ms 5px
-  let leftNeedAdd = (newX - oldX) * gridSize;
-  let topNeedAdd = (newY - oldY) * gridSize;
-  const onceLeftNeedAdd = (newX - oldX) * 5;
-  const onceTopNeedAdd = (newY - oldY) * 5;
-  const selfMoveTimer = setInterval(() => {
-    if (selfDiv) {
-      const nowLeft = selfDiv.offsetLeft;
-      const nowTop = selfDiv.offsetTop;
-      if (leftNeedAdd !== 0) {
-        selfDiv!.style.left = nowLeft + onceLeftNeedAdd + "px";
-        leftNeedAdd -= onceLeftNeedAdd;
-      }
-      if (topNeedAdd !== 0) {
-        selfDiv!.style.top = nowTop + onceTopNeedAdd + "px";
-        topNeedAdd -= onceTopNeedAdd;
-      }
-      console.log(leftNeedAdd, topNeedAdd);
-      if (leftNeedAdd === 0 && topNeedAdd === 0) {
-        clearInterval(selfMoveTimer);
-        canMove = true;
-      }
-    }
-  }, 20);
-}
+const emit = defineEmits<{
+  (e: "moveMap", oldX: number, oldY: number, newX: number, newY: number): void;
+}>();
 
 function selfWalk(newX: number, newY: number) {
   // 是移动自己，还是移动地图
   const oldX = self.xy.x;
   const oldY = self.xy.y;
-  if (inAroundEdges(oldX, oldY) && inAroundEdges(newX, newY)) {
-    // 移动自己
-    moveSelf(newX, oldX, newY, oldY);
-  } else {
-    moveSelf(newX, oldX, newY, oldY);
-    // moveMap();
-  }
   self.xy.x = newX;
   self.xy.y = newY;
+  let moveElement: HTMLElement;
+  let moveRole: boolean;
+  if (inAroundEdges(oldX, oldY) && inAroundEdges(newX, newY)) {
+    // 移动自己
+    moveElement = document.getElementById(self.id)!;
+    moveRole = true;
+  } else {
+    // 移动地图
+    moveElement = props.mapDiv;
+    moveRole = false;
+    // fixme delete
+    emit("moveMap", oldX, oldY, newX, newY);
+  }
+  moveFunction(newX, oldX, newY, oldY, moveRole, moveElement).then(() => {
+    canMove = true;
+  });
 }
 
 function inAroundEdges(x: number, y: number): boolean {

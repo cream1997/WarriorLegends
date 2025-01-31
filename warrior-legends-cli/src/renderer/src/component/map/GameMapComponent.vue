@@ -58,6 +58,11 @@ onMounted(() => {
     });
   });
 });
+
+function moveMap(oldX, oldY, newX, newY) {
+  const leftNeedAdd = (oldX - newX) * gridSize;
+  const topAdd = (oldY - newY) * gridSize;
+}
 </script>
 
 <template>
@@ -76,7 +81,12 @@ onMounted(() => {
         :style="{ width: gridSize + 'px', height: gridSize + 'px' }"
       ></div>
     </div>
-    <role-container-component ref="roleContainer" :meta-info="mapMeta" />
+    <role-container-component
+      ref="roleContainer"
+      :meta-info="mapMeta"
+      :map-div="mapRef!"
+      @move-map="moveMap"
+    />
   </div>
 </template>
 
