@@ -4,6 +4,8 @@ import { electronApp, is, optimizer } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
 import startup from "./MainProcessStartup";
 
+app.commandLine.appendSwitch("force-device-scale-factor", "1");
+
 function createWindow() {
   const mainWindow = new BrowserWindow({
     show: false,
@@ -17,8 +19,8 @@ function createWindow() {
 
   mainWindow.on("ready-to-show", () => {
     // 个数要是奇数，才能有中间的一个格子
-    const width = 50 * 15;
-    const height = 50 * 13;
+    const width = 50 * 11;
+    const height = 50 * 11;
     mainWindow.setContentSize(width, height);
     mainWindow.show();
     mainWindow.webContents.openDevTools();

@@ -1,5 +1,5 @@
 import { onMounted, onUnmounted } from "vue";
-import msgDispatcher from "@/ts/MsgDispatcher";
+import msgDispatcher from "@/net/ws/MsgDispatcher";
 
 export default function useNetSetupHooks() {
   onMounted(() => {

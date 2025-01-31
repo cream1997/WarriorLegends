@@ -11,3 +11,9 @@ export interface LoginMapRes {
 export interface EnterMapRes {
   role: Role;
 }
+
+export interface WalkRes {
+  id: string;
+  x: number;
+  y: number;
+}

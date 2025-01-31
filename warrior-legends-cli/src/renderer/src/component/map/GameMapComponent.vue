@@ -6,7 +6,7 @@ export default {
 <script setup lang="ts">
 import { nextTick, onMounted, reactive, ref } from "vue";
 import useGameMapComponentHooks from "@/component/map/useGameMapComponentHooks";
-import msgReceiver from "@/ts/MsgReceiver";
+import msgReceiver from "@/net/ws/MsgReceiver";
 import { EnterMapRes, LoginMapRes } from "@/interface/res/ResInterface";
 import Role from "@/interface/Role";
 import RoleContainerComponent from "@/component/roleContainer/RoleContainerComponent.vue";
@@ -76,7 +76,7 @@ onMounted(() => {
         :style="{ width: gridSize + 'px', height: gridSize + 'px' }"
       ></div>
     </div>
-    <role-container-component ref="roleContainer" :self="mapMeta.role" />
+    <role-container-component ref="roleContainer" :meta-info="mapMeta" />
   </div>
 </template>
 

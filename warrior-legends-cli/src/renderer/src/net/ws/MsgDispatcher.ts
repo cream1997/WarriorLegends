@@ -1,5 +1,5 @@
 type MsgListener = (data: any, msgType: number) => void;
-import { ResMsgType } from "@/ts/MsgReceiver";
+import { ResMsgType } from "@/net/ws/MsgReceiver";
 
 class MsgDispatcher {
   private msgType2Listeners: Map<ResMsgType, MsgListener[]>;

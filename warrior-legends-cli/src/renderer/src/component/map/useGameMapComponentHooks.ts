@@ -1,5 +1,5 @@
 import { onMounted } from "vue";
-import msgSender from "@/ts/MsgSender";
+import msgSender from "@/net/ws/MsgSender";
 
 export default function useGameMapComponentHooks() {
   onMounted(() => {

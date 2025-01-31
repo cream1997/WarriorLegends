@@ -1,11 +1,16 @@
-import msgDispatcher from "@/ts/MsgDispatcher";
-import { EnterMapRes, LoginMapRes } from "@/interface/res/ResInterface";
+import msgDispatcher from "@/net/ws/MsgDispatcher";
+import {
+  EnterMapRes,
+  LoginMapRes,
+  WalkRes
+} from "@/interface/res/ResInterface";
 
 type MsgHandler<T> = (msgData: T, msgType: number) => void;
 
 export enum ResMsgType {
   LoginMap = 1,
-  EnterMap = 2
+  EnterMap = 2,
+  Walk
 }
 
 class MsgReceiver {
@@ -15,6 +20,10 @@ class MsgReceiver {
 
   onReceiveEnterMap(handler: MsgHandler<EnterMapRes>) {
     msgDispatcher.addMsgListener(ResMsgType.EnterMap, handler);
+  }
+
+  onReceiveWalk(handler: MsgHandler<WalkRes>) {
+    msgDispatcher.addMsgListener(ResMsgType.Walk, handler);
   }
 }
 

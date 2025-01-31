@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import useNetSetupHooks from "@/ts/useNetSetupHooks";
+import useNetSetupHooks from "@/net/ws/useNetSetupHooks";
 import GameMapComponent from "@/component/map/GameMapComponent.vue";
 
 useNetSetupHooks();
