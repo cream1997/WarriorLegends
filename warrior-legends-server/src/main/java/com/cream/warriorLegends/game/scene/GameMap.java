@@ -2,6 +2,7 @@ package com.cream.warriorLegends.game.scene;
 
 import com.cream.warriorLegends.game.base.Role;
 import com.cream.warriorLegends.game.config.MapCfg;
+import com.cream.warriorLegends.game.msg.dto.res.EnterMapRes;
 import com.cream.warriorLegends.game.msg.dto.res.LoginMapRes;
 import com.cream.warriorLegends.game.net.MsgDispatcher;
 import com.cream.warriorLegends.obj.common.position.SquareRange;
@@ -70,6 +71,9 @@ public class GameMap {
         MsgDispatcher.sendMsg(role.getId(), loginMapRes);
 
         // todo enterRole信息要群发给周围的所有人
+        EnterMapRes enterMapRes = new EnterMapRes();
+        enterMapRes.setRole(role);
+        MsgDispatcher.sendMsg(role.getId(), enterMapRes);
     }
 
     public void removeRole(long id) {

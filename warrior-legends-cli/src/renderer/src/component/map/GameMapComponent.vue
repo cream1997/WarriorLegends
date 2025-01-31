@@ -7,8 +7,9 @@ export default {
 import { nextTick, onMounted, reactive, ref } from "vue";
 import useGameMapComponentHooks from "@/component/map/useGameMapComponentHooks";
 import msgReceiver from "@/ts/MsgReceiver";
-import { LoginMapRes } from "@/interface/res/LoginMapRes";
+import { EnterMapRes, LoginMapRes } from "@/interface/res/ResInterface";
 import Role from "@/interface/Role";
+import RoleContainerComponent from "@/component/roleContainer/RoleContainerComponent.vue";
 
 useGameMapComponentHooks();
 
@@ -16,6 +17,7 @@ const gridSize = 50;
 
 const mapMeta = ref<LoginMapRes>();
 const mapRef = ref<HTMLDivElement>();
+const roleContainer = ref();
 let roleSelf: Role;
 
 function initMap() {
@@ -26,8 +28,8 @@ function initMap() {
     mapRef.value.style.width = mapWidth + "px";
     mapRef.value.style.height = mapHeight + "px";
     // 定位地图位置
-    const roleX = roleSelf.xy.x * gridSize;
-    const roleY = roleSelf.xy.y * gridSize;
+    const roleX = (roleSelf.xy.x + 1) * gridSize - gridSize / 2;
+    const roleY = (roleSelf.xy.y + 1) * gridSize - gridSize / 2;
     let leftOffset = window.innerWidth / 2 - roleX;
     let topOffset = window.innerHeight / 2 - roleY;
     if (leftOffset > 0) {
@@ -48,7 +50,7 @@ function initMap() {
 }
 
 onMounted(() => {
-  msgReceiver.onReceiveEnterMap((loginMapRes: LoginMapRes) => {
+  msgReceiver.onReceiveLoginMap((loginMapRes: LoginMapRes) => {
     mapMeta.value = loginMapRes;
     // 初始化地图
     nextTick(() => {
@@ -74,6 +76,7 @@ onMounted(() => {
         :style="{ width: gridSize + 'px', height: gridSize + 'px' }"
       ></div>
     </div>
+    <role-container-component ref="roleContainer" :self="mapMeta.role" />
   </div>
 </template>
 

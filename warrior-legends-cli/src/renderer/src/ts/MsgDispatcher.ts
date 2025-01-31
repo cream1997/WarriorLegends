@@ -9,7 +9,6 @@ class MsgDispatcher {
   }
 
   addMsgListener(msgType: ResMsgType, listener: MsgListener) {
-    console.log("执行");
     let listenerList = this.msgType2Listeners.get(msgType);
     if (!listenerList) {
       listenerList = [];
@@ -19,6 +18,7 @@ class MsgDispatcher {
   }
 
   dispatchMsg(msg) {
+    console.log(`收到消息，msgType: ${msg.msgType}`);
     const listenerList = this.msgType2Listeners.get(msg.msgType);
     if (!listenerList) {
       console.error("没有处理对应类型的回调");

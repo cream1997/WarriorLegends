@@ -7,3 +7,7 @@ export interface LoginMapRes {
   width: number;
   height: number;
 }
+
+export interface EnterMapRes {
+  role: Role;
+}

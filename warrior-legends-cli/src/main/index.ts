@@ -6,8 +6,6 @@ import startup from "./MainProcessStartup";
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === "linux" ? { icon } : {}),
@@ -18,6 +16,10 @@ function createWindow() {
   });
 
   mainWindow.on("ready-to-show", () => {
+    // 个数要是奇数，才能有中间的一个格子
+    const width = 50 * 15;
+    const height = 50 * 13;
+    mainWindow.setContentSize(width, height);
     mainWindow.show();
     mainWindow.webContents.openDevTools();
   });
