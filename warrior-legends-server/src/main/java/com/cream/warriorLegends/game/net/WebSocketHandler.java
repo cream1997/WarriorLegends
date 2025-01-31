@@ -2,6 +2,7 @@ package com.cream.warriorLegends.game.net;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.cream.warriorLegends.manager.MapManager;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -17,10 +18,12 @@ import org.springframework.stereotype.Component;
 public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
     private final MsgDispatcher msgDispatcher;
+    private final MapManager mapManager;
 
     @Autowired
-    public WebSocketHandler(MsgDispatcher msgDispatcher) {
+    public WebSocketHandler(MsgDispatcher msgDispatcher, MapManager mapManager) {
         this.msgDispatcher = msgDispatcher;
+        this.mapManager = mapManager;
     }
 
     @Override
@@ -40,6 +43,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.info("客户端断开: {}", ctx.channel().id().asShortText());
+        mapManager.logout(TokenValidator.getIdAfterLogin(ctx.channel()));
         this.msgDispatcher.removeChannel(ctx.channel());
         super.channelInactive(ctx);
     }

@@ -17,17 +17,32 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MapManager {
 
     private final ConcurrentHashMap<Integer, GameMap> allMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Long, Role> allRole = new ConcurrentHashMap<>();
 
     private final GameMap mainCity;
-
-    private void addMap(int id, GameMap map) {
-        allMap.put(id, map);
-    }
 
     public MapManager() {
         this.init();
         this.mainCity = allMap.get(1);
         Objects.requireNonNull(this.mainCity);
+    }
+
+    public static void putRole(Role role) {
+        allRole.put(role.getId(), role);
+    }
+
+    public static Role getRole(long id) {
+        return allRole.get(id);
+    }
+
+    public static Role getRoleNoNull(long id) {
+        Role role = allRole.get(id);
+        Objects.requireNonNull(role);
+        return role;
+    }
+
+    public static void removeRole(long id) {
+        allRole.remove(id);
     }
 
     private void init() {
@@ -38,6 +53,10 @@ public class MapManager {
             log.info("创建地图:{}", gameMap.getName());
         }
 
+    }
+
+    private void addMap(int id, GameMap map) {
+        allMap.put(id, map);
     }
 
     private List<MapCfg> mockCfgs() {
@@ -56,6 +75,18 @@ public class MapManager {
 
     public void loginMap(Role role) {
         // fixme 进入默认地图
+        putRole(role);
         mainCity.enterRole(role);
+    }
+
+    public void logout(long id) {
+        Role role = getRole(id);
+        if (role == null) {
+            // 这里允许为空，因为拒绝连接也会走到这里
+            return;
+        }
+        mainCity.removeRole(role.getId());
+        removeRole(role.getId());
+        log.info("{}退出游戏", role.getNickNane());
     }
 }

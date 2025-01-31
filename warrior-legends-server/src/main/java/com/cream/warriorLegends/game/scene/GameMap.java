@@ -69,4 +69,21 @@ public class GameMap {
 
         // todo enterRole信息要群发给周围的所有人
     }
+
+    public void removeRole(long id) {
+        Role role = allRole.get(id);
+        if (role == null) {
+            log.error("地图中不存在该玩家,id:{}", id);
+            return;
+        }
+        allRole.remove(id);
+        Point point = allPoint.get(role.getXy());
+        if (point == null) {
+            log.error("未找到对应点位");
+            return;
+        }
+        point.removeRole(id);
+
+        // todo 同步信息给周围人
+    }
 }
