@@ -1,5 +1,7 @@
 package com.cream.warriorLegends.game.scene;
 
+import com.cream.warriorLegends.game.base.Role;
+import com.cream.warriorLegends.obj.common.position.Xy;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashSet;
@@ -13,12 +15,20 @@ public class Point {
 
     private final Set<Long> allRoleId = new HashSet<>();
 
-    public void addRole(long id) {
+    public void addRole(Role role) {
+        long id = role.getId();
         if (allRoleId.contains(id)) {
             log.error("该点位已存在该玩家，id:{}", id);
             return;
         }
         allRoleId.add(id);
+        Xy xy = role.getXy();
+        if (xy == null) {
+            role.setXy(new Xy(x, y));
+        } else {
+            xy.x = x;
+            xy.y = y;
+        }
     }
 
     public void removeRole(long id) {

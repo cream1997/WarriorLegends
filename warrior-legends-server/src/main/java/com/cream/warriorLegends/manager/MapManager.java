@@ -4,6 +4,7 @@ import com.cream.warriorLegends.game.base.Role;
 import com.cream.warriorLegends.game.config.MapCfg;
 import com.cream.warriorLegends.game.scene.GameMap;
 import com.cream.warriorLegends.obj.common.position.Xy;
+import com.cream.warriorLegends.utils.bean.DbTool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +21,10 @@ public class MapManager {
     private static final ConcurrentHashMap<Long, Role> allRole = new ConcurrentHashMap<>();
 
     private final GameMap mainCity;
+    private final DbTool dbTool;
 
-    public MapManager() {
+    public MapManager(DbTool dbTool) {
+        this.dbTool = dbTool;
         this.init();
         this.mainCity = allMap.get(1);
         Objects.requireNonNull(this.mainCity);
@@ -87,6 +90,7 @@ public class MapManager {
         }
         mainCity.removeRole(role.getId());
         removeRole(role.getId());
+        this.dbTool.updateRole(role);
         log.info("{}退出游戏", role.getNickNane());
     }
 }

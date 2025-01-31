@@ -57,10 +57,12 @@ public class GameMap {
             return;
         }
         allRole.put(role.getId(), role);
-        point.addRole(role.getId());
+        point.addRole(role);
+        role.setMapId(this.id);
         log.info("{}进入{}", role.getNickNane(), this.name);
 
         LoginMapRes loginMapRes = new LoginMapRes();
+        loginMapRes.setRole(role);
         loginMapRes.setMapId(this.id);
         loginMapRes.setMapName(this.name);
         loginMapRes.setWidth(this.width);

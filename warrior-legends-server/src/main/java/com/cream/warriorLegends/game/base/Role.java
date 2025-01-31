@@ -15,8 +15,8 @@ public class Role {
     private long id;
     private String nickNane;
     private int level;
-    private long hp;
-    private long mp;
+    private int hp;
+    private int mp;
     private int mapId;
     private Xy xy;
     private long loginTime;
