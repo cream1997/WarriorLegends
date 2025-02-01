@@ -77,8 +77,8 @@ public class MapManager {
         MapCfg mapCfg = new MapCfg();
         mapCfg.setId(1);
         mapCfg.setName("精灵岛");
-        mapCfg.setWidth(25);
-        mapCfg.setHeight(25);
+        mapCfg.setWidth(9);
+        mapCfg.setHeight(9);
         List<Xy> blockPoints = new ArrayList<>();
         mapCfg.setBlockPoint(blockPoints);
 

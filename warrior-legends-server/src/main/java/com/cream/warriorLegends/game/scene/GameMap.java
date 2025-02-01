@@ -35,7 +35,7 @@ public class GameMap {
         this.width = mapCfg.getWidth();
         this.height = mapCfg.getHeight();
         // todo range的作用补充
-        this.defaultBornRange = new SquareRange(10, 10, 0);
+        this.defaultBornRange = new SquareRange(5, 5, 0);
         /*
          * 地图坐标左上角为原点
          */
