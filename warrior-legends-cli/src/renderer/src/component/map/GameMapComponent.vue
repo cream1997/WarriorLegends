@@ -10,10 +10,14 @@ import msgReceiver from "@/net/ws/MsgReceiver";
 import { EnterMapRes, LoginMapRes } from "@/interface/res/ResInterface";
 import Role from "@/interface/Role";
 import RoleContainerComponent from "@/component/roleContainer/RoleContainerComponent.vue";
+import useWinMetaStore from "@/store/useWinMetaStore";
+
+const winMetaStore = useWinMetaStore();
+const gridSize = winMetaStore.gridSize;
+const winWidth = winMetaStore.winWidth;
+const winHeight = winMetaStore.winHeight;
 
 useGameMapComponentHooks();
-
-const gridSize = 50;
 
 const mapMeta = ref<LoginMapRes>();
 const mapRef = ref<HTMLDivElement>();
@@ -30,8 +34,8 @@ function initMap() {
     // 定位地图位置
     const roleX = (roleSelf.xy.x + 1) * gridSize - gridSize / 2;
     const roleY = (roleSelf.xy.y + 1) * gridSize - gridSize / 2;
-    let leftOffset = window.innerWidth / 2 - roleX;
-    let topOffset = window.innerHeight / 2 - roleY;
+    let leftOffset = winWidth / 2 - roleX;
+    let topOffset = winHeight / 2 - roleY;
     if (leftOffset > 0) {
       leftOffset = 0;
     }

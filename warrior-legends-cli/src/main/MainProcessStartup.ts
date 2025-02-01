@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import GameWebSocket from "./GameWebSocket";
+import GameWebSocket from "./net/GameWebSocket";
 
 export default function (
   app: Electron.App,

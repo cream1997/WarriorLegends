@@ -3,6 +3,13 @@ import { join } from "path";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
 import startup from "./MainProcessStartup";
+import {
+  columnCount,
+  gridSize,
+  rowCount,
+  winHeight,
+  winWidth
+} from "./common/Constants";
 
 app.commandLine.appendSwitch("force-device-scale-factor", "1");
 
@@ -18,12 +25,16 @@ function createWindow() {
   });
 
   mainWindow.on("ready-to-show", () => {
-    // 个数要是奇数，才能有中间的一个格子
-    const width = 50 * 3;
-    const height = 50 * 3;
-    mainWindow.setContentSize(width, height);
+    mainWindow.setContentSize(winWidth, winHeight);
     mainWindow.show();
     mainWindow.webContents.openDevTools();
+    mainWindow.webContents.send("windowMeta", {
+      rowCount,
+      columnCount,
+      gridSize,
+      winWidth,
+      winHeight
+    });
   });
 
   mainWindow.webContents.setWindowOpenHandler((details) => {

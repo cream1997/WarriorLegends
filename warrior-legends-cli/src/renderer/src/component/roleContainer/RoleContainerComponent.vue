@@ -6,6 +6,12 @@ import msgReceiver from "@/net/ws/MsgReceiver";
 import msgSender from "@/net/ws/MsgSender";
 import { WalkReq } from "@/interface/req/ReqInterface";
 import moveFunction from "@/component/common/moveFunction";
+import useWinMetaStore from "@/store/useWinMetaStore";
+
+const winMetaStore = useWinMetaStore();
+const gridSize = winMetaStore.gridSize;
+const winWidth = winMetaStore.winWidth;
+const winHeight = winMetaStore.winHeight;
 
 interface PropsType {
   metaInfo: LoginMapRes;
@@ -16,8 +22,6 @@ const objMap = reactive<Map<string, Role>>(new Map());
 const props = defineProps<PropsType>();
 const metaInfo = props.metaInfo;
 const self: Role = metaInfo.role;
-//todo 将来抽取成外部配置的常量，包括父组件(GameMap组件)里的和主进程创建窗口用到的
-const gridSize = 50;
 
 msgReceiver.onReceiveEnterMap((enterMapRes: EnterMapRes) => {
   const enterRole = enterMapRes.role;
@@ -128,8 +132,6 @@ function inAroundEdges(x: number, y: number): boolean {
   const ySize = y * gridSize + gridSize / 2;
   const mapWidthSize = metaInfo.width * gridSize;
   const mapHeightSize = metaInfo.height * gridSize;
-  const winWidth = window.innerWidth;
-  const winHeight = window.innerHeight;
   if (xSize < winWidth / 2 || xSize > mapWidthSize - winWidth / 2) {
     if (ySize < winHeight / 2 || ySize > mapHeightSize - winHeight / 2) {
       return true;
@@ -141,14 +143,12 @@ function inAroundEdges(x: number, y: number): boolean {
 function inXEdges(x: number): boolean {
   const xSize = x * gridSize + gridSize / 2;
   const mapWidthSize = metaInfo.width * gridSize;
-  const winWidth = window.innerWidth;
   return xSize <= winWidth / 2 || xSize >= mapWidthSize - winWidth / 2;
 }
 
 function inYEdges(y: number): boolean {
   const ySize = y * gridSize + gridSize / 2;
   const mapHeightSize = metaInfo.height * gridSize;
-  const winHeight = window.innerHeight;
   return ySize <= winHeight / 2 || ySize >= mapHeightSize - winHeight / 2;
 }
 
