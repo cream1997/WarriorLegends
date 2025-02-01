@@ -77,8 +77,8 @@ public class MapManager {
         MapCfg mapCfg = new MapCfg();
         mapCfg.setId(1);
         mapCfg.setName("精灵岛");
-        mapCfg.setWidth(200);
-        mapCfg.setHeight(200);
+        mapCfg.setWidth(25);
+        mapCfg.setHeight(25);
         List<Xy> blockPoints = new ArrayList<>();
         mapCfg.setBlockPoint(blockPoints);
 
@@ -101,6 +101,6 @@ public class MapManager {
         mainCity.removeRole(role.getId());
         removeRole(role.getId());
         this.dbTool.updateRole(role);
-        log.info("{}退出游戏", role.getNickNane());
+        log.info("{}退出游戏", role.getNickName());
     }
 }

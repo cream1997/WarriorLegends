@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class Role {
     private long id;
-    private String nickNane;
+    private String nickName;
     private int level;
     private int hp;
     private int mp;

@@ -27,7 +27,7 @@ public class RoleManager {
             role.setHp(100);
             role.setMp(100);
             String randomStr = UUID.randomUUID().toString().replace("-", "").substring(0, 4);
-            role.setNickNane("User@" + randomStr);
+            role.setNickName("User@" + randomStr);
             dbTool.insertRole(role);
         }
         return role;

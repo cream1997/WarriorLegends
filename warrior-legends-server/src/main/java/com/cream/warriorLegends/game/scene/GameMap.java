@@ -72,7 +72,7 @@ public class GameMap {
 
     private void putRole(Role role) {
         if (allRole.containsKey(role.getId())) {
-            log.error("{}进入地图时，地图{}中已经存在该玩家", role.getNickNane(), this.name);
+            log.error("{}进入地图时，地图{}中已经存在该玩家", role.getNickName(), this.name);
         }
         this.allRole.put(role.getId(), role);
     }
@@ -82,7 +82,7 @@ public class GameMap {
         putRole(role);
         point.addRole(role);
         role.setMapId(this.id);
-        log.info("{}进入{}", role.getNickNane(), this.name);
+        log.info("{}进入{}", role.getNickName(), this.name);
 
         LoginMapRes loginMapRes = new LoginMapRes();
         loginMapRes.setRole(role);
