@@ -19,8 +19,8 @@ function createWindow() {
 
   mainWindow.on("ready-to-show", () => {
     // 个数要是奇数，才能有中间的一个格子
-    const width = 50 * 11;
-    const height = 50 * 11;
+    const width = 50 * 3;
+    const height = 50 * 3;
     mainWindow.setContentSize(width, height);
     mainWindow.show();
     mainWindow.webContents.openDevTools();

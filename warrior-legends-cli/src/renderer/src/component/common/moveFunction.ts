@@ -32,7 +32,7 @@ export default function moveFunction(
         leftNeedAdd -= onceLeftNeedAdd;
       }
       if (topNeedAdd !== 0) {
-        moveElement.style.left = nowTop + onceTopNeedAdd + "px";
+        moveElement.style.top = nowTop + onceTopNeedAdd + "px";
         topNeedAdd -= onceTopNeedAdd;
       }
       if (leftNeedAdd === 0 && topNeedAdd === 0) {

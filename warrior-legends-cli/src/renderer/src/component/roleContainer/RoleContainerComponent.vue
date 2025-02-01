@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive } from "vue";
+import { nextTick, onMounted, reactive } from "vue";
 import Role from "@/interface/Role";
 import { EnterMapRes, LoginMapRes } from "@/interface/res/ResInterface";
 import msgReceiver from "@/net/ws/MsgReceiver";
@@ -12,16 +12,19 @@ interface PropsType {
   mapDiv: HTMLElement;
 }
 
+const objMap = reactive<Map<string, Role>>(new Map());
 const props = defineProps<PropsType>();
 const metaInfo = props.metaInfo;
 const self: Role = metaInfo.role;
-const objList = reactive<Role[]>([]);
 //todo 将来抽取成外部配置的常量，包括父组件(GameMap组件)里的和主进程创建窗口用到的
 const gridSize = 50;
 
 msgReceiver.onReceiveEnterMap((enterMapRes: EnterMapRes) => {
   const enterRole = enterMapRes.role;
-  objList.push(enterRole);
+  objMap.set(enterRole.id, enterRole);
+  nextTick(() => {
+    computeOffsetOnce(enterRole);
+  });
 });
 
 let canMove = true;
@@ -34,8 +37,6 @@ function addMoveKeyListener() {
       // 200ms走一格
       return;
     }
-    lastMovingTime = now;
-    canMove = false;
     const walkReq: WalkReq = { x: self.xy.x, y: self.xy.y };
     // 判断按的是上下左右
     if (e.key === "ArrowUp") {
@@ -55,6 +56,8 @@ function addMoveKeyListener() {
     ) {
       return;
     }
+    lastMovingTime = now;
+    canMove = false;
     msgSender.sendWalk(walkReq);
   });
 }
@@ -63,14 +66,13 @@ msgReceiver.onReceiveWalk((walkRes) => {
   const id = walkRes.id;
   const newX = walkRes.x;
   const newY = walkRes.y;
+  const obj = objMap.get(id);
+  obj!.xy.x = newX;
+  obj!.xy.y = newY;
   if (id === self.id) {
     selfWalk(newX, newY);
   }
 });
-
-const emit = defineEmits<{
-  (e: "moveMap", oldX: number, oldY: number, newX: number, newY: number): void;
-}>();
 
 function selfWalk(newX: number, newY: number) {
   // 是移动自己，还是移动地图
@@ -78,62 +80,94 @@ function selfWalk(newX: number, newY: number) {
   const oldY = self.xy.y;
   self.xy.x = newX;
   self.xy.y = newY;
-  let moveElement: HTMLElement;
-  let moveRole: boolean;
-  if (inAroundEdges(oldX, oldY) && inAroundEdges(newX, newY)) {
-    // 移动自己
-    moveElement = document.getElementById(self.id)!;
-    moveRole = true;
-  } else {
-    // 移动地图
-    moveElement = props.mapDiv;
-    moveRole = false;
-    // fixme delete
-    emit("moveMap", oldX, oldY, newX, newY);
-  }
-  moveFunction(newX, oldX, newY, oldY, moveRole, moveElement).then(() => {
+
+  // 因为人物用的是相对定位，所以无论那种情况，人的位置都要移动
+  const selfDiv = document.getElementById(self.id);
+  moveFunction(newX, oldX, newY, oldY, true, selfDiv!).then(() => {
     canMove = true;
   });
+
+  if (needMoveMap(newX, newY, oldX, oldY)) {
+    // 移动地图
+    moveFunction(newX, oldX, newY, oldY, false, props.mapDiv).then(() => {
+      canMove = true;
+    });
+  }
+}
+
+// fixme 这个方法暂不考虑斜着走
+function needMoveMap(
+  newX: number,
+  newY: number,
+  oldX: number,
+  oldY: number
+): boolean {
+  if (inXEdges(oldX)) {
+    if (inAroundEdges(newX, newY)) {
+      return false;
+    }
+    //动x
+    if (newX !== oldX && inXEdges(newX)) {
+      return false;
+    }
+  }
+  if (inYEdges(oldY)) {
+    if (inAroundEdges(newX, newY)) {
+      return false;
+    }
+    //动y
+    if (newY != oldY && inYEdges(newY)) {
+      return false;
+    }
+  }
+  return true;
 }
 
 function inAroundEdges(x: number, y: number): boolean {
-  const xSize = (x + 1) * gridSize;
-  const ySize = (y + 1) * gridSize;
+  const xSize = x * gridSize + gridSize / 2;
+  const ySize = y * gridSize + gridSize / 2;
   const mapWidthSize = metaInfo.width * gridSize;
   const mapHeightSize = metaInfo.height * gridSize;
   const winWidth = window.innerWidth;
   const winHeight = window.innerHeight;
-  if (xSize <= winWidth || xSize >= mapWidthSize - winWidth) {
-    if (ySize <= winHeight || ySize >= mapHeightSize - winHeight) {
+  if (xSize < winWidth / 2 || xSize > mapWidthSize - winWidth / 2) {
+    if (ySize < winHeight / 2 || ySize > mapHeightSize - winHeight / 2) {
       return true;
     }
   }
   return false;
 }
 
+function inXEdges(x: number): boolean {
+  const xSize = x * gridSize + gridSize / 2;
+  const mapWidthSize = metaInfo.width * gridSize;
+  const winWidth = window.innerWidth;
+  return xSize <= winWidth / 2 || xSize >= mapWidthSize - winWidth / 2;
+}
+
+function inYEdges(y: number): boolean {
+  const ySize = y * gridSize + gridSize / 2;
+  const mapHeightSize = metaInfo.height * gridSize;
+  const winHeight = window.innerHeight;
+  return ySize <= winHeight / 2 || ySize >= mapHeightSize - winHeight / 2;
+}
+
 onMounted(() => {
   addMoveKeyListener();
 });
 
-function computeOffset(role: Role) {
+function computeOffsetOnce(role: Role) {
+  const roleElement = document.getElementById(role.id);
   const left = role.xy.x * 50;
   const top = role.xy.y * 50;
-  return {
-    left: left + "px",
-    top: top + "px"
-  };
+  roleElement!.style.left = left + "px";
+  roleElement!.style.top = top + "px";
 }
 </script>
 
 <template>
-  <div
-    v-for="obj in objList"
-    :id="obj.id"
-    :key="obj.id"
-    class="obj"
-    :style="computeOffset(obj)"
-  >
-    {{ obj.nickName }}
+  <div v-for="obj in objMap.values()" :id="obj.id" :key="obj.id" class="obj">
+    x:{{ obj.xy.x }},y:{{ obj.xy.y }}
   </div>
 </template>
 
